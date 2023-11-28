@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>subject write</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+                <form action="http://127.0.0.1:8000/memorycards/" method="post">
+                    <section>
+                        <div class="flex justify-end">
+                            <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+                        </div>
+                        <div class="flex flex-col">
+                            <input class="border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300" type="text" id="title" name="title" placeholder="제목"><br>
+                            <textarea class="h-96 border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300" id="content" name="content" placeholder="내용" style="resize:none;"></textarea>
+                        </div>
+                    </section>
+                    <div class="flex justify-center">
+                        <input class="text-white hover:text-gray-300 cursor-pointer rounded-2xl bg-emerald-500 hover:bg-emerald-600 p-2 w-1/6 mt-4" type="submit" value="작성" id="subject_write">
+                    </div>
+                </form>
+                <div class="flex justify-between">
+                    <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                    <img class="w-12 h-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='javascript:window.history.back();'">
+                </div>
+            </div>
+        </div>
+        <script>
+            const subject_write = document.querySelector('#subject_write')
+            const token = localStorage.getItem('token');
+
+            subject_write.addEventListener('click', (e) => {
+                e.preventDefault(); // submit의 기본동작을 막는다.
+                const title = document.querySelector('input[name="title"]').value;
+                const content = document.querySelector('textarea[name="content"]').value;
+                const data = {
+                    title: title,
+                    content: content,
+                }
+                console.log(token)
+                console.log(data)
+                // fetch를 이용해서 서버에 POST 요청을 보낸다.
+                fetch('http://127.0.0.1:8000/memorycards/', {
+                    method: 'post',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Invalid token');
+                    }
+                    window.location.href = '/memory_card/memory_card_list.html'
+                  // 토큰이 유효하면 페이지 로딩 계속 진행
+                })
+                
+            });
+        </script>
+    </body>
+</html>

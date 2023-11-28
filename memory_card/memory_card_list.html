@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Memory Card Page</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+            <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+                <!-- 프로필 이미지 -->
+                <div>
+                    <div class="flex justify-end">
+                        <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+                    </div>
+                    <div>
+                        <div id="card-list" class="flex flex-col">
+                        </div>
+                    </div>
+                </div>
+                
+                <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+            </section>
+        </div>
+
+        <script>
+            window.onload = function() {
+                const token = localStorage.getItem('token');
+            
+                // 토큰이 없는 경우 로그인 페이지로 이동
+                if (!token) {
+                    window.location.href = '/accounts/login.html';
+                    return;
+                }
+            
+                // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
+                fetch('http://127.0.0.1:8000/memorycards/', {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                    }
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Invalid token');
+                    }
+                return response.json()
+                  // 토큰이 유효하면 페이지 로딩 계속 진행
+                })
+                .then(data => {
+                    const listElement = document.getElementById('card-list'); // id가 'list'인 요소를 가져옴
+
+                    if(data.length === 0) {
+                        const cardItem = document.createElement('a');
+                        cardItem.href = '/memory_card/memory_card_list_write.html';
+                        cardItem.innerText = '작성된 암기 주제가 없습니다.\n여기를 클릭하여 주제를 작성해 주세요'
+                        cardItem.className = "text-center text-emerald-300 hover:text-emerald-500"
+                        listElement.appendChild(cardItem)
+                    }
+                    else {
+                        data.forEach(item => {
+                            // 각 아이템을 HTML 요소로 변환
+                            const listItem = document.createElement('div');
+                            const cardLink = document.createElement('a');
+                            cardLink.href = `/memory_card/memory_card_content.html?id=${item.id}`
+                            cardLink.innerText = `${item.title} by ${item.author}`;
+
+                            listItem.addEventListener('click', () => {
+                                window.location.href = cardLink.href;
+                            })
+
+                            listItem.className = "border border-gray-400 rounded-2xl text-center m-4 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500"
+                            // 리스트에 추가
+                            listItem.appendChild(cardLink);
+                            listElement.appendChild(listItem);
+                        });
+                        const iconBox = document.createElement('div');
+                        iconBox.className = 'flex justify-center'
+                        const icon = document.createElement('img');
+                        icon.className = 'w-10 opacity-60 cursor-pointer hover:opacity-80 mt-4';
+                        icon.src = '../image/writeicon.png'
+                        icon.onclick = function() {
+                            location.href='/memory_card/memory_card_list_write.html';
+                        }
+                        iconBox.appendChild(icon)
+                        listElement.appendChild(iconBox)
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // 토큰이 유효하지 않으면 로그인 페이지로 이동
+                    window.location.href = '/accounts/login.html';
+                });
+                
+            }
+
+
+        </script>
+    </body>
+</html>

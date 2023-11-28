@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Memory Card Content</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+                <section>
+                    <div class="flex justify-end">
+                        <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+                    </div>
+                    <div class="flex flex-col" id="card-contents"></div>
+                    <div class="flex justify-center" id="btnbox"></div>
+                </section>
+                <div class="flex justify-between">
+                    <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                    <img class="w-12 h-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='javascript:window.history.back();'">
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = function() {
+                const token = localStorage.getItem('token');
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+
+                if (!token) {
+                    // 토큰이 없는 경우 로그인 페이지로 이동
+                    window.location.href = '/accounts/login.html';
+                    return;
+                    }
+                // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
+                fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                    }
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Invalid token');
+                    }
+                // 토큰이 유효하면 페이지 로딩 계속 진행
+                return response.json()
+                })
+                .then(data => {
+                    // 기존 내용 출력
+                    const btnbox = document.querySelector('#btnbox');
+                    const editbtn = document.createElement('input');
+
+                    editbtn.className = 'text-white hover:text-gray-300 cursor-pointer rounded-2xl bg-emerald-500 hover:bg-emerald-600 p-2 w-1/6 m-4 text-center';
+                    editbtn.value = '수정';
+                    editbtn.type = 'submit'
+                    editbtn.id = 'contentedit'
+
+                    btnbox.appendChild(editbtn)
+                    
+                    const cardContents = document.getElementById('card-contents');
+                    const titleArea = document.createElement('input');
+                    const contentArea = document.createElement('textarea');
+
+                    titleArea.value = `${data.title}`;
+                    contentArea.value = `${data.content}`;
+                    
+                    titleArea.className = 'border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300'
+                    titleArea.type = 'text'
+                    titleArea.id = 'title'
+                    titleArea.name = 'title'
+                    
+                    contentArea.className = 'h-96 border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300'
+                    contentArea.type = 'text'
+                    contentArea.id = 'content'
+                    contentArea.name = 'content'
+                    contentArea.style = 'resize:None'
+                    
+                    cardContents.appendChild(titleArea);
+                    cardContents.appendChild(contentArea);
+                    
+                    // 수정 버튼 기능 추가
+                    const contentEdit = document.querySelector('#contentedit')
+        
+                    contentEdit.addEventListener('click', (e) => {
+                        // 수정 버튼 누르면 서버로 PUT 요청 보내기
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const id = urlParams.get('id');
+                        const title = document.querySelector('input[name="title"]').value;
+                        const content = document.querySelector('textarea[name="content"]').value;
+                        const data = {
+                            title: title,
+                            content: content,
+                        }
+                        fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
+                            method: 'PUT',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Token ${token}`
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Invalid token');
+                            }
+                            window.location.href = `/memory_card/memory_card_content.html?id=${id}`
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // 토큰이 유효하지 않으면 로그인 페이지로 이동
+                    window.location.href = '/accounts/login.html';
+                });
+            }
+
+
+
+        </script>
+    </body>
+</html>

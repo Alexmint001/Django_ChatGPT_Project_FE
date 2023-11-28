@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>register</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="space-y-1 flex justify-center items-center border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+            <form  class="space-y-1 flex flex-col m-3 relative" action="http://127.0.0.1:8000/accounts/register/" method="post">
+                <img class="w-32 h-32 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src="../image/profileicon.png" alt="">
+                <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col m-3 pt-16 pl-6 pr-6 pb-10">
+                    
+                    <div class="flex p-1 w-72 mt-10">
+                        <img class="w-10 h-10" src="../image/useridicon.png" alt="">
+                        <input class="grow pl-2 text-white placeholder-white" type="text" id="username" name="username" placeholder="User ID" style="background: #B5DECB;">
+                    </div>
+                    <div class="flex p-1 w-72">
+                        <img class="w-10 h-10" src="../image/emailicon.png" alt="">
+                        <input class="grow pl-2 text-white placeholder-white" type="Email" id="email" name="email" placeholder="Email" style="background: #B5DECB;">
+                    </div>
+                    <div class="flex p-1 w-72">
+                        <img class="w-10 h-10" src="../image/passwordicon.png" alt="">
+                        <input class="grow pl-2 text-white placeholder-white" type="password" id="password" name="password" placeholder="Password" style="background: #B5DECB;">
+                    </div>
+                    <div class="flex p-1 w-72">
+                        <img class="w-10 h-10" src="../image/passwordicon.png" alt="">
+                        <input class="grow pl-2 text-white placeholder-white" type="password" id="password2" name="password2" placeholder="Password2" style="background: #B5DECB;">
+                    </div>
+                </section>
+                    <div class="flex justify-center">
+                        <input class="text-green-500 hover:text-green-700 cursor-pointer rounded-br-2xl rounded-bl-2xl bg-slate-100 bg-opacity-50 hover:bg-slate-100 hover:bg-opacity-70 p-2 w-2/3" type="submit" id="register" value="REGISTER">
+                    </div>
+                </form>
+        </div>
+        <script>
+            const register = document.querySelector('#register');
+    
+            register.addEventListener('click', (e) => {
+                e.preventDefault(); // submit의 기본동작을 막는다.
+                const username = document.querySelector('input[name="username"]').value;
+                const email = document.querySelector('input[name="email"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+                const password2 = document.querySelector('input[name="password2"]').value;
+                const data = {
+                    username: username,
+                    email: email,
+                    password: password,
+                    password2: password2,
+                }
+    
+                // fetch를 이용해서 서버에 POST 요청을 보낸다.
+                fetch('http://127.0.0.1:8000/accounts/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Invalid username or password');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    localStorage.getItem('token', data.token);
+                    window.location.href = '/accounts/login.html';
+                })
+
+            });
+        </script>
+    </body>
+</html>

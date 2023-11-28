@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Memory Card Content</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+                <section>
+                    <div class="flex justify-end">
+                        <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+                    </div>
+                    <div class="flex flex-col">
+                        <div id="card-title" class="border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 text-emerald-300"></div>
+                        <div id="card-content" class="h-96 border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 text-emerald-300 "></div>
+                    </div>
+                    <div class="flex justify-center" id="btnbox">
+
+                    </div>
+                </section>
+                <div class="flex justify-between">
+                    <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                    <img class="w-12 h-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='/memory_card/memory_card_list.html'">
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                const token = localStorage.getItem('token');
+
+                if (!token) {
+                    // 토큰이 없는 경우 로그인 페이지로 이동
+                    window.location.href = '/accounts/login.html';
+                    return;
+                    }
+                // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
+                fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                    }
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Invalid token');
+                    }
+                // 토큰이 유효하면 페이지 로딩 계속 진행
+                return response.json()
+                })
+                .then(data => {
+                    // 글을 작성한 작성자가 현재 유저일 경우에만 수정 버튼과 삭제 버튼 생성
+                    currentuser = data.username
+                    if (data.is_author) {
+                        const btnBox = document.querySelector('#btnbox');
+                        const editBtn = document.createElement('a');
+                        const deleteBtn = document.createElement('a');
+
+                        editBtn.className = 'text-white hover:text-gray-300 cursor-pointer rounded-2xl bg-emerald-500 hover:bg-emerald-600 p-2 w-1/6 m-4 text-center';
+                        editBtn.innerText = '수정';
+                        editBtn.id = 'contentedit'
+                        editBtn.href = `/memory_card/memory_card_content_edit.html?id=${id}` 
+
+                        deleteBtn.className = 'text-white hover:text-gray-300 cursor-pointer rounded-2xl bg-emerald-500 hover:bg-emerald-600 p-2 w-1/6 m-4 text-center';
+                        deleteBtn.innerText = '삭제';
+                        deleteBtn.id = 'contentdelete'
+
+                        btnBox.appendChild(editBtn)
+                        btnBox.appendChild(deleteBtn)
+
+                        // 삭제 버튼 기능 추가
+                        const contentDelete = document.querySelector('#contentdelete')
+
+                        contentDelete.addEventListener('click', (e) => {
+                            // 삭제 버튼 누르면 서버로 DELETE 요청 전송
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const id = urlParams.get('id');
+                            fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
+                                method: 'DELETE',
+                                headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Token ${token}`
+                                },
+                            })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error('Invalid token');
+                                }
+                                window.location.href = `/memory_card/memory_card_list.html`
+                            });
+                        })
+                    }
+
+                    // 제목과 내용 출력
+                    const cardTitle = document.getElementById('card-title');
+                    const cardContent = document.getElementById('card-content');
+                    const titleArea = document.createElement('p');
+                    const contentArea = document.createElement('p');
+
+                    titleArea.innerText = `${data.title}`;
+                    contentArea.innerText = `${data.content}`;
+                    
+                    cardTitle.appendChild(titleArea);
+                    cardContent.appendChild(contentArea);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // 토큰이 유효하지 않으면 로그인 페이지로 이동
+                    window.location.href = '/accounts/login.html';
+                });
+            }
+            
+        </script>
+    </body>
+</html>

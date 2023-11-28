@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chat Bot</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            /* 스크롤바 전체를 선택 */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+            
+            /* 스크롤 트랙(스크롤바의 배경)을 선택 */
+            ::-webkit-scrollbar-track {
+                background: none;
+            }
+            
+            /* 스크롤 핸들(사용자가 드래그할 수 있는 부분)을 선택 */
+            ::-webkit-scrollbar-thumb {
+                background: none;
+                border-radius: 10px;
+            }
+            
+            /* 스크롤 핸들을 호버할 때 */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #4ec981;
+            }
+
+        </style>
+    </head>
+    <body>
+    <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+        <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col m-3 p-6" style="width:468px; height:910px;">
+            <div class="flex justify-end">
+                <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+            </div>
+            <section class="grow rounded-2xl bg-green-200 space-y-1 flex flex-col justify-between m-3">
+                <div>
+                    <div class="p-2 text-center rounded-tl-2xl rounded-tr-2xl bg-green-100 text-green-500">요청은 하루에 5개까지만 보낼 수 있습니다.</div>
+                    <div id="chatbox" class="flex flex-col overflow-y-auto" style = "height:530px">
+                    </div>
+                </div>
+                <form action="http://127.0.0.1:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36">
+                    <textarea name="prompt" id="prompt" style="resize:none;" class="grow rounded-xl p-2 text-green-500"></textarea>
+                    <img src="../image/msgsendicon.png" alt="" id="chatbot" class="w-10 h-10 m-1 opacity-80 hover:opacity-100 cursor-pointer self-end">
+                </form>
+            </section>
+            <div class="flex justify-end"><img class="w-12 h-8 mt-4 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='javascript:window.history.back();'"></div>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+
+            // 토큰이 없는 경우 로그인 페이지로 이동
+            if (!token) {
+                window.location.href = '/accounts/login.html';
+                return;
+            }
+            // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
+            fetch(`http://127.0.0.1:8000/chatbot/`, {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+                }
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Invalid token');
+                }
+                return response.json()
+              // 토큰이 유효하면 페이지 로딩 계속 진행
+            })
+            .then(data => {
+                console.log(data)
+                data.forEach(item => {
+                    console.log(item.prompt)
+                    console.log(item.response)
+                    // 각 아이템을 HTML 요소로 변환
+                    const chatbox = document.getElementById('chatbox');
+                    const promptbox = document.createElement('div');
+                    const responsebox = document.createElement('div');
+                    const prompt = document.createElement('p');
+                    const userimg = document.createElement('img');
+                    const response = document.createElement('p');
+                    const aiimg = document.createElement('img');
+
+                    userimg.src = '../image/profileicon.png'
+                    aiimg.src = '../image/AIicon.png'
+
+                    userimg.className = 'w-10 h-10 ml-2 rounded-full self-end'
+                    aiimg.className = 'w-10 h-10 mr-2'
+
+                    prompt.innerText = `${item.prompt}`;
+                    response.innerText = `${item.response}`;
+
+                    prompt.className = 'border border-gray-400 p-2 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
+                    response.className = 'border border-gray-400 p-2 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
+
+                    promptbox.appendChild(prompt)
+                    promptbox.appendChild(userimg)
+                    responsebox.appendChild(aiimg)
+                    responsebox.appendChild(response)
+
+                    promptbox.className = 'flex m-2 ml-20 justify-end'
+                    responsebox.className = 'flex m-2 mr-20'
+
+                    // 리스트에 추가
+                    chatbox.appendChild(promptbox);
+                    chatbox.appendChild(responsebox);
+                });
+            })
+        }
+
+        const chatbot = document.querySelector('#chatbot');
+
+        chatbot.addEventListener('click', (e) => {
+            e.preventDefault(); // submit의 기본동작을 막는다.
+            const token = localStorage.getItem('token');
+            const prompt = document.querySelector('textarea[name="prompt"]').value;
+            const data = {
+                prompt: prompt,
+            }
+            
+            // fetch를 이용해서 서버에 POST 요청을 보낸다.
+            fetch('http://127.0.0.1:8000/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify(data)
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Invalid token');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const chatbox = document.getElementById('chatbox');
+                const prompt = document.createElement('p');
+                const response = document.createElement('p');
+                prompt.innerText = `User: ${data.prompt}`;
+                response.innerText = `Bot: ${data.response}`;
+                
+                prompt.className = 'border border-gray-400 p-2 m-2 ml-20 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
+                response.className = 'border border-gray-400 p-2 m-2 mr-20 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
+
+                // 리스트에 추가
+                chatbox.appendChild(prompt);
+                chatbox.appendChild(response);
+            })
+            .catch((error) => {
+                console.error('Error', error);
+                alert('유효하지 않은 내용입니다.')
+            });
+
+        })
+    </script>
+    </body>
+</html>

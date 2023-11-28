@@ -31,12 +31,12 @@
         </div>
         <script>
             window.onload = function() {
-                const token = localStorage.getItem('token');
+                const accesstoken = localStorage.getItem('accesstoken');
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
 
                 // 토큰이 없는 경우 로그인 페이지로 이동
-                if (!token) {
+                if (!accesstoken) {
                     window.location.href = '/accounts/login.html';
                     return;
                 }
@@ -45,8 +45,7 @@
                 fetch(`http://127.0.0.1:8000/accounts/profile/`, {
                     method: 'GET',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                        'Authorization': `Bearer ${accesstoken}`
                     }
                 })
                 .then((response) => {
@@ -73,7 +72,8 @@
 
             logout.addEventListener('click', (e) => {
                 e.preventDefault();
-                localStorage.removeItem('token');
+                localStorage.removeItem('accesstoken');
+                localStorage.removeItem('refreshtoken');
                 window.location.href = '/accounts/login.html';
             })
         </script>

@@ -27,7 +27,6 @@
             ::-webkit-scrollbar-thumb:hover {
                 background: #4ec981;
             }
-
         </style>
     </head>
     <body>
@@ -39,7 +38,7 @@
             <section class="grow rounded-2xl bg-green-200 space-y-1 flex flex-col justify-between m-3">
                 <div>
                     <div class="p-2 text-center rounded-tl-2xl rounded-tr-2xl bg-green-100 text-green-500">요청은 하루에 5개까지만 보낼 수 있습니다.</div>
-                    <div id="chatbox" class="flex flex-col overflow-y-auto" style = "height:530px">
+                    <div id="chatbox" class="flex flex-col overflow-y-auto mt-1" style = "height:540px">
                     </div>
                 </div>
                 <form action="http://127.0.0.1:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36">
@@ -52,10 +51,10 @@
     </div>
     <script>
         window.onload = function() {
-            const token = localStorage.getItem('token');
+            const accesstoken = localStorage.getItem('accesstoken');
 
             // 토큰이 없는 경우 로그인 페이지로 이동
-            if (!token) {
+            if (!accesstoken) {
                 window.location.href = '/accounts/login.html';
                 return;
             }
@@ -63,8 +62,7 @@
             fetch(`http://127.0.0.1:8000/chatbot/`, {
                 method: 'GET',
                 headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${accesstoken}`
                 }
             })
             .then((response) => {
@@ -75,10 +73,7 @@
               // 토큰이 유효하면 페이지 로딩 계속 진행
             })
             .then(data => {
-                console.log(data)
                 data.forEach(item => {
-                    console.log(item.prompt)
-                    console.log(item.response)
                     // 각 아이템을 HTML 요소로 변환
                     const chatbox = document.getElementById('chatbox');
                     const promptbox = document.createElement('div');
@@ -100,26 +95,34 @@
                     prompt.className = 'border border-gray-400 p-2 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
                     response.className = 'border border-gray-400 p-2 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
 
+                    prompt.style = 'max-width: 250px; word-wrap: break-word;'
+                    response.style = 'max-width: 250px; word-wrap: break-word;'
+
                     promptbox.appendChild(prompt)
                     promptbox.appendChild(userimg)
                     responsebox.appendChild(aiimg)
                     responsebox.appendChild(response)
 
-                    promptbox.className = 'flex m-2 ml-20 justify-end'
-                    responsebox.className = 'flex m-2 mr-20'
+                    promptbox.className = 'flex m-2 justify-end'
+                    responsebox.className = 'flex m-2'
 
                     // 리스트에 추가
                     chatbox.appendChild(promptbox);
                     chatbox.appendChild(responsebox);
                 });
             })
+            .catch((error) => {
+                console.error('Error:', error);
+                // 토큰이 유효하지 않으면 로그인 페이지로 이동
+                window.location.href = '/accounts/login.html';
+            });
         }
 
         const chatbot = document.querySelector('#chatbot');
 
         chatbot.addEventListener('click', (e) => {
             e.preventDefault(); // submit의 기본동작을 막는다.
-            const token = localStorage.getItem('token');
+            const accesstoken = localStorage.getItem('accesstoken');
             const prompt = document.querySelector('textarea[name="prompt"]').value;
             const data = {
                 prompt: prompt,
@@ -129,8 +132,8 @@
             fetch('http://127.0.0.1:8000/chatbot/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${accesstoken}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
@@ -138,25 +141,26 @@
                 if (!response.ok) {
                     throw new Error('Invalid token');
                 }
+                prompt = ''
                 return response.json();
             })
             .then(data => {
                 const chatbox = document.getElementById('chatbox');
-                const prompt = document.createElement('p');
-                const response = document.createElement('p');
-                prompt.innerText = `User: ${data.prompt}`;
-                response.innerText = `Bot: ${data.response}`;
+                const promptdata = document.createElement('p');
+                const responsedata = document.createElement('p');
+                promptdata.innerText = `User: ${data.prompt}`;
+                responsedata.innerText = `Bot: ${data.response}`;
                 
-                prompt.className = 'border border-gray-400 p-2 m-2 ml-20 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
-                response.className = 'border border-gray-400 p-2 m-2 mr-20 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
+                promptdata.className = 'border border-gray-400 p-2 m-2 ml-20 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
+                responsedata.className = 'border border-gray-400 p-2 m-2 mr-20 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
 
                 // 리스트에 추가
-                chatbox.appendChild(prompt);
-                chatbox.appendChild(response);
+                chatbox.appendChild(promptdata);
+                chatbox.appendChild(responsedata);
             })
             .catch((error) => {
                 console.error('Error', error);
-                alert('유효하지 않은 내용입니다.')
+                alert('요청 가능한 횟수를 초과하였습니다.')
             });
 
         })

@@ -32,19 +32,18 @@
             window.onload = function() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
-                const token = localStorage.getItem('token');
+                const accesstoken = localStorage.getItem('accesstoken');
 
-                if (!token) {
+                if (!accesstoken) {
                     // 토큰이 없는 경우 로그인 페이지로 이동
                     window.location.href = '/accounts/login.html';
                     return;
-                    }
+                }
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
                 fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
                     method: 'GET',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${accesstoken}`
                     }
                 })
                 .then((response) => {
@@ -84,8 +83,7 @@
                             fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
                                 method: 'DELETE',
                                 headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Token ${token}`
+                                    'Authorization': `Bearer ${accesstoken}`
                                 },
                             })
                             .then((response) => {

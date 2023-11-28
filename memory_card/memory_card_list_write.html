@@ -32,7 +32,7 @@
         </div>
         <script>
             const subject_write = document.querySelector('#subject_write')
-            const token = localStorage.getItem('token');
+            const accesstoken = localStorage.getItem('accesstoken');
 
             subject_write.addEventListener('click', (e) => {
                 e.preventDefault(); // submit의 기본동작을 막는다.
@@ -42,14 +42,13 @@
                     title: title,
                     content: content,
                 }
-                console.log(token)
-                console.log(data)
+
                 // fetch를 이용해서 서버에 POST 요청을 보낸다.
                 fetch('http://127.0.0.1:8000/memorycards/', {
                     method: 'post',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${accesstoken}`,
+                    'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
                 })

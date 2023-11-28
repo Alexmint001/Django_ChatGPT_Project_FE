@@ -25,11 +25,11 @@
         </div>
         <script>
             window.onload = function() {
-                const token = localStorage.getItem('token');
+                const accesstoken = localStorage.getItem('accesstoken');
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
 
-                if (!token) {
+                if (!accesstoken) {
                     // 토큰이 없는 경우 로그인 페이지로 이동
                     window.location.href = '/accounts/login.html';
                     return;
@@ -38,8 +38,7 @@
                 fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
                     method: 'GET',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                        'Authorization': `Bearer ${accesstoken}`
                     }
                 })
                 .then((response) => {
@@ -98,8 +97,8 @@
                         fetch(`http://127.0.0.1:8000/memorycards/${id}/`, {
                             method: 'PUT',
                             headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Token ${token}`
+                                'Authorization': `Bearer ${accesstoken}`,
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(data)
                         })

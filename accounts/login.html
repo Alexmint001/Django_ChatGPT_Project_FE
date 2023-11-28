@@ -58,7 +58,8 @@
             })
             .then(data => {
                 console.log('Success: ', data);
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('accesstoken', data.token.access);
+                localStorage.setItem('refreshtoken', data.token.refresh);
                 window.location.href = '/memory_card/memory_card_list.html';
             })
             .catch((error) => {

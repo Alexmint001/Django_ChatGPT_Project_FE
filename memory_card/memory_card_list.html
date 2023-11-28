@@ -6,6 +6,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Memory Card Page</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            /* 스크롤바 전체를 선택 */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+            
+            /* 스크롤 트랙(스크롤바의 배경)을 선택 */
+            ::-webkit-scrollbar-track {
+                background: none;
+            }
+            
+            /* 스크롤 핸들(사용자가 드래그할 수 있는 부분)을 선택 */
+            ::-webkit-scrollbar-thumb {
+                background: none;
+                border-radius: 10px;
+            }
+            
+            /* 스크롤 핸들을 호버할 때 */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #4ec981;
+            }
+        </style>
     </head>
     <body>
         <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
@@ -16,21 +38,23 @@
                         <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
                     </div>
                     <div>
-                        <div id="card-list" class="flex flex-col">
+                        <div id="card-list" class="flex flex-col overflow-y-auto" style = "height:730px">
                         </div>
                     </div>
                 </div>
                 
-                <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                <div id="iconsection" class="flex justify-between">
+                    <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                </div>
             </section>
         </div>
 
         <script>
             window.onload = function() {
-                const token = localStorage.getItem('token');
+                const accesstoken = localStorage.getItem('accesstoken');
             
                 // 토큰이 없는 경우 로그인 페이지로 이동
-                if (!token) {
+                if (!accesstoken) {
                     window.location.href = '/accounts/login.html';
                     return;
                 }
@@ -39,8 +63,7 @@
                 fetch('http://127.0.0.1:8000/memorycards/', {
                     method: 'GET',
                     headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${accesstoken}`
                     }
                 })
                 .then((response) => {
@@ -59,6 +82,32 @@
                         cardItem.innerText = '작성된 암기 주제가 없습니다.\n여기를 클릭하여 주제를 작성해 주세요'
                         cardItem.className = "text-center text-emerald-300 hover:text-emerald-500"
                         listElement.appendChild(cardItem)
+                    }
+                    else if(data.length >= 8) {
+                        data.forEach(item => {
+                            // 각 아이템을 HTML 요소로 변환
+                            const listItem = document.createElement('div');
+                            const cardLink = document.createElement('a');
+                            cardLink.href = `/memory_card/memory_card_content.html?id=${item.id}`
+                            cardLink.innerText = `${item.title} by ${item.author}`;
+
+                            listItem.addEventListener('click', () => {
+                                window.location.href = cardLink.href;
+                            })
+
+                            listItem.className = "border border-gray-400 rounded-2xl text-center m-4 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500"
+                            // 리스트에 추가
+                            listItem.appendChild(cardLink);
+                            listElement.appendChild(listItem);
+                        });
+                        const iconSection = document.getElementById('iconsection')
+                        const icon = document.createElement('img');
+                        icon.className = 'w-10 opacity-60 cursor-pointer hover:opacity-80';
+                        icon.src = '../image/writeicon.png'
+                        icon.onclick = function() {
+                        location.href='/memory_card/memory_card_list_write.html';
+                        }
+                        iconSection.appendChild(icon)
                     }
                     else {
                         data.forEach(item => {
@@ -96,8 +145,6 @@
                 });
                 
             }
-
-
         </script>
     </body>
 </html>

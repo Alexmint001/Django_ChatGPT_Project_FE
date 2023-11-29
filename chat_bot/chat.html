@@ -141,26 +141,51 @@
                 if (!response.ok) {
                     throw new Error('Invalid token');
                 }
-                prompt = ''
                 return response.json();
             })
             .then(data => {
                 const chatbox = document.getElementById('chatbox');
+                const promptbox = document.createElement('div');
+                const responsebox = document.createElement('div');
+                const userimg = document.createElement('img');
                 const promptdata = document.createElement('p');
+                const aiimg = document.createElement('img');
                 const responsedata = document.createElement('p');
-                promptdata.innerText = `User: ${data.prompt}`;
-                responsedata.innerText = `Bot: ${data.response}`;
+                promptdata.innerText = `${data.prompt}`;
+                responsedata.innerText = `${data.response}`;
+
+                userimg.src = '../image/profileicon.png'
+                aiimg.src = '../image/AIicon.png'
+
+                userimg.className = 'w-10 h-10 ml-2 rounded-full self-end'
+                aiimg.className = 'w-10 h-10 mr-2'
                 
-                promptdata.className = 'border border-gray-400 p-2 m-2 ml-20 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
-                responsedata.className = 'border border-gray-400 p-2 m-2 mr-20 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
+                promptdata.className = 'border border-gray-400 p-2 bg-green-500 text-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl'
+                responsedata.className = 'border border-gray-400 p-2 text-green-500 bg-green-100 rounded-tr-xl rounded-bl-xl rounded-br-xl'
+
+                promptdata.style = 'max-width: 250px; word-wrap: break-word;'
+                responsedata.style = 'max-width: 250px; word-wrap: break-word;'
 
                 // 리스트에 추가
-                chatbox.appendChild(promptdata);
-                chatbox.appendChild(responsedata);
+                
+                promptbox.appendChild(promptdata)
+                promptbox.appendChild(userimg)
+                responsebox.appendChild(aiimg)
+                responsebox.appendChild(responsedata)
+
+                chatbox.appendChild(promptbox);
+                chatbox.appendChild(responsebox);
+
+                promptbox.className = 'flex m-2 justify-end'
+                responsebox.className = 'flex m-2'
+
+                var textbox = document.querySelector('textarea[name="prompt"]')
+                textbox.value = ''
+
             })
             .catch((error) => {
                 console.error('Error', error);
-                alert('요청 가능한 횟수를 초과하였습니다.')
+                console.log('뭐지')
             });
 
         })

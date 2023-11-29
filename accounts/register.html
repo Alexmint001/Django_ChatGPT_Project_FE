@@ -8,28 +8,45 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <div class="space-y-1 flex justify-center items-center border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+        <!-- 배경 -->
+        <div class="space-y-1 flex justify-center items-center min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+
+            <!-- 메인 부분 -->
             <form  class="space-y-1 flex flex-col m-3 relative" action="http://127.0.0.1:8000/accounts/register/" method="post">
+
+                <!-- 프로필 아이콘 -->
                 <img class="w-32 h-32 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src="../image/profileicon.png" alt="">
+
+                <!-- 입력 창 박스 -->
                 <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col m-3 pt-16 pl-6 pr-6 pb-10">
                     
+                    <!-- User ID -->
                     <div class="flex p-1 w-72 mt-10">
                         <img class="w-10 h-10" src="../image/useridicon.png" alt="">
                         <input class="grow pl-2 text-white placeholder-white" type="text" id="username" name="username" placeholder="User ID" style="background: #B5DECB;">
                     </div>
+
+                    <!-- Email -->
                     <div class="flex p-1 w-72">
                         <img class="w-10 h-10" src="../image/emailicon.png" alt="">
                         <input class="grow pl-2 text-white placeholder-white" type="Email" id="email" name="email" placeholder="Email" style="background: #B5DECB;">
                     </div>
+
+                    <!-- Password1 -->
                     <div class="flex p-1 w-72">
                         <img class="w-10 h-10" src="../image/passwordicon.png" alt="">
                         <input class="grow pl-2 text-white placeholder-white" type="password" id="password" name="password" placeholder="Password" style="background: #B5DECB;">
                     </div>
+
+                    <!-- Password2 -->
                     <div class="flex p-1 w-72">
                         <img class="w-10 h-10" src="../image/passwordicon.png" alt="">
                         <input class="grow pl-2 text-white placeholder-white" type="password" id="password2" name="password2" placeholder="Password2" style="background: #B5DECB;">
                     </div>
+
                 </section>
+
+                <!-- 회원가입 버튼 -->
                     <div class="flex justify-center">
                         <input class="text-green-500 hover:text-green-700 cursor-pointer rounded-br-2xl rounded-bl-2xl bg-slate-100 bg-opacity-50 hover:bg-slate-100 hover:bg-opacity-70 p-2 w-2/3" type="submit" id="register" value="REGISTER">
                     </div>
@@ -39,6 +56,7 @@
             const register = document.querySelector('#register');
     
             register.addEventListener('click', (e) => {
+                // 회원가입 버튼 클릭 이벤트 추가 - POST 요청
                 e.preventDefault(); // submit의 기본동작을 막는다.
                 const username = document.querySelector('input[name="username"]').value;
                 const email = document.querySelector('input[name="email"]').value;
@@ -50,7 +68,6 @@
                     password: password,
                     password2: password2,
                 }
-    
                 // fetch를 이용해서 서버에 POST 요청을 보낸다.
                 fetch('http://127.0.0.1:8000/accounts/register/', {
                     method: 'POST',
@@ -70,7 +87,6 @@
                     localStorage.getItem('token', data.token);
                     window.location.href = '/accounts/login.html';
                 })
-
             });
         </script>
     </body>

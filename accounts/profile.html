@@ -8,21 +8,33 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <div class="space-y-1 flex justify-center items-center border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+        <!-- 배경 -->
+        <div class="space-y-1 flex justify-center items-center min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+
+            <!-- 메인 부분 -->
                 <div class="space-y-1 flex flex-col m-3 relative">
+
+                    <!-- 프로필 아이콘 -->
                     <img class="w-32 h-32 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src="../image/profileicon.png" alt="">
+
+                    <!-- 유저 이름과 이메일 출력 부분 -->
                     <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col m-3 pt-16 pl-6 pr-6 pb-10">
-                    <img class="w-8 opacity-60 absolute top-5 right-8 cursor-pointer hover:opacity-80" src="../image/closeicon.png" alt="" onclick="location.href='javascript:window.history.back();'">
-                    <div class="flex p-1 pt-10 w-72 mt-10">
-                        <img class="w-10 h-10" src="../image/useridicon.png" alt="">
-                        <input class="grow pl-2 text-white outline-none" id="username" name="username" style="background: #B5DECB;" readonly>
-                    </div>
-                    <div class="flex p-1 w-72">
-                        <img class="w-10 h-10" src="../image/emailicon.png" alt="">
-                        <input class="grow pl-2 text-white outline-none" id="email" name="email" style="background: #B5DECB;" readonly>
-                    </div>
-    
+
+                        <!-- 창 닫기 버튼 -->
+                        <img class="w-8 opacity-60 absolute top-5 right-8 cursor-pointer hover:opacity-80" src="../image/closeicon.png" alt="" onclick="location.href='javascript:window.history.back();'">
+
+                        <div class="flex p-1 pt-10 w-72 mt-10">
+                            <img class="w-10 h-10" src="../image/useridicon.png" alt="">
+                            <input class="grow pl-2 text-white outline-none" id="username" name="username" style="background: #B5DECB;" readonly>
+                        </div>
+                        <div class="flex p-1 w-72">
+                            <img class="w-10 h-10" src="../image/emailicon.png" alt="">
+                            <input class="grow pl-2 text-white outline-none" id="email" name="email" style="background: #B5DECB;" readonly>
+                        </div>
+
                     </section>
+
+                    <!-- 로그아웃 버튼 -->
                     <div class="flex justify-center">
                         <input class="text-green-500 hover:text-green-700 cursor-pointer rounded-br-2xl rounded-bl-2xl bg-slate-100 bg-opacity-50 hover:bg-slate-100 hover:bg-opacity-70 p-2 w-2/3" type="submit" value="LOGOUT" id="logout">
                     </div>
@@ -31,6 +43,7 @@
         </div>
         <script>
             window.onload = function() {
+                // 페이지 불러오면서 실행되는 기능 추가
                 const accesstoken = localStorage.getItem('accesstoken');
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
@@ -40,7 +53,6 @@
                     window.location.href = '/accounts/login.html';
                     return;
                 }
-            
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
                 fetch(`http://127.0.0.1:8000/accounts/profile/`, {
                     method: 'GET',
@@ -71,6 +83,7 @@
             const logout = document.querySelector('#logout')
 
             logout.addEventListener('click', (e) => {
+                // 로그아웃 버튼 클릭이벤트 추가
                 e.preventDefault();
                 localStorage.removeItem('accesstoken');
                 localStorage.removeItem('refreshtoken');

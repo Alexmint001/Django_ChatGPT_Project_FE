@@ -8,23 +8,41 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <div class="flex justify-center items-center space-y-1 border-4 border-green-300 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+        <!-- 배경 -->
+        <div class="flex justify-center items-center space-y-1 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+
+            <!-- 메인 영역 -->
             <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+
+                <!-- 입력창 박스 -->
                 <section>
+
+                    <!-- 프로필 아이콘 -->
                     <div class="flex justify-end">
                         <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
                     </div>
+
+                    <!-- title 및 content 담는 영역 -->
                     <div class="flex flex-col" id="card-contents"></div>
+
+                    <!-- 버튼 생성 영역 -->
                     <div class="flex justify-center" id="btnbox"></div>
+
                 </section>
+
+                <!-- chatbot 이동 및 뒤로가기 버튼 영역 -->
                 <div class="flex justify-between">
                     <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
                     <img class="w-12 h-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='javascript:window.history.back();'">
                 </div>
+
             </div>
+
         </div>
+
         <script>
             window.onload = function() {
+                // 페이지 불러오면서 실행되는 기능 추가
                 const accesstoken = localStorage.getItem('accesstoken');
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
@@ -67,12 +85,16 @@
                     titleArea.value = `${data.title}`;
                     contentArea.value = `${data.content}`;
                     
+                    // title 부분 Tailwind CSS 적용
                     titleArea.className = 'border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300'
+
                     titleArea.type = 'text'
                     titleArea.id = 'title'
                     titleArea.name = 'title'
                     
+                    // content 부분 Tailwind CSS 적용
                     contentArea.className = 'h-96 border border-gray-400 rounded-2xl mt-4 ml-8 mr-8 p-4 bg-white bg-opacity-40 hover:bg-opacity-60 cursor-pointer text-emerald-300 hover:text-emerald-500 placeholder-emerald-300'
+
                     contentArea.type = 'text'
                     contentArea.id = 'content'
                     contentArea.name = 'content'

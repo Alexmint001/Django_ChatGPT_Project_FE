@@ -34,7 +34,7 @@
         <div class="flex justify-center items-center space-y-1 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
 
             <!-- 메인 영역 -->
-            <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+            <section class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-3" style="width:468px; height:820px;">
 
                 <!-- 입력창 박스 -->
                 <div>
@@ -46,7 +46,7 @@
 
                     <!-- 글 목록 -->
                     <div>
-                        <div id="card-list" class="flex flex-col overflow-y-auto" style = "height:730px"></div>
+                        <div id="card-list" class="flex flex-col overflow-y-auto" style = "height:670px"></div>
                     </div>
 
                 </div>
@@ -71,7 +71,8 @@
                 }
             
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
-                fetch('http://127.0.0.1:8000/memorycards/', {
+                // fetch('http://127.0.0.1:8000/memorycards/', {
+                fetch('http://13.124.190.254:8000/memorycards/', {
                     method: 'GET',
                     headers: {
                     'Authorization': `Bearer ${accesstoken}`
@@ -95,7 +96,7 @@
                         cardItem.className = "text-center text-emerald-300 hover:text-emerald-500"
                         listElement.appendChild(cardItem)
                     }
-                    else if(data.length >= 8) {
+                    else if(data.length >= 7) {
                         data.forEach(item => {
                             // 각 아이템을 HTML 요소로 변환
                             const listItem = document.createElement('div');
@@ -118,7 +119,7 @@
                         const icon = document.createElement('img');
 
                         // 글 작성 아이콘 Tailwind CSS 적용
-                        icon.className = 'w-10 opacity-60 cursor-pointer hover:opacity-80';
+                        icon.className = 'w-8 h-8 opacity-60 cursor-pointer hover:opacity-80';
 
                         icon.src = '../image/writeicon.png'
                         icon.onclick = function() {

@@ -12,10 +12,11 @@
         <div class="flex justify-center items-center space-y-1 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
 
             <!-- 메인 영역 -->
-            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-6" style="width:468px; height:910px;">
+            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-3" style="width:468px; height:820px;">
 
                 <!-- 입력창 영역 -->
-                <form action="http://127.0.0.1:8000/memorycards/" method="post">
+                <!-- <form action="http://127.0.0.1:8000/memorycards/" method="post"> -->
+                <form action="http://13.124.190.254:8000/memorycards/" method="post">
 
                     <!-- 메인 컨텐츠 박스 -->
                     <section>
@@ -64,7 +65,8 @@
                     content: content,
                 }
                 // fetch를 이용해서 서버에 POST 요청을 보낸다.
-                fetch('http://127.0.0.1:8000/memorycards/', {
+                // fetch('http://127.0.0.1:8000/memorycards/', {
+                fetch('http://13.124.190.254:8000/memorycards/', {
                     method: 'post',
                     headers: {
                     'Authorization': `Bearer ${accesstoken}`,

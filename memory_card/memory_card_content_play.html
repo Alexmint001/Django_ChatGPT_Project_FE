@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Memory Card Content</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            .flashcard {
+                perspective: 1000px;
+            }
+        
+            .card {
+                width: 100%;
+                height: 300px;
+                transform-style: preserve-3d;
+                transition: transform 0.5s;
+            }
+        
+            .card.flipped {
+                transform: rotateY(180deg);
+            }
+        
+            .card-front,
+            .card-back {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                backface-visibility: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+        
+            .card-front {
+                background-color: #fff;
+            }
+        
+            .card-back {
+                background-color: #e0f7fa;
+                transform: rotateY(180deg);
+            }
+            </style>
+    </head>
+    <body>
+        <!-- 배경 -->
+        <div class="flex justify-center items-center space-y-1 min-h-screen" style="background: linear-gradient(180deg, #A1DCDC 0%, rgba(172, 226, 228, 0.77) 23.96%, rgba(185, 233, 237, 0.52) 49.48%, rgba(114, 243, 212, 0.47) 68.23%, rgba(183, 243, 177, 0.42) 91.15%);">
+
+            <!-- 메인 영역 -->
+            <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-3" style="width:468px; height:820px;">
+
+                <!-- 메인 컨텐츠 박스 -->
+                <section>
+
+                    <!-- 프로필 아이콘 -->
+                    <div class="flex justify-end">
+                        <img class="w-14 h-14 rounded-full mb-4 cursor-pointer hover:opacity-80" src="../image/profileicon.png" alt="" onclick="location.href='/accounts/profile.html'">
+                    </div>
+
+                    <div style="margin:30% 0">
+                        <!-- 플래시카드 영역 -->
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="flashcard" id="flashcard" style="width:90%">
+                                <div class="card">
+                                    <div id="card-title" class="card-front border border-gray-400 rounded-2xl mt-4 bg-white text-emerald-300">앞면
+                                    </div>
+                                    <div id="card-content" class="card-back border border-gray-400 rounded-2xl mt-4 bg-white text-emerald-300 ">뒷면
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 플레이 버튼 영역 -->
+                        <div class="flex justify-center gap-10">
+                            <button class="mt-8 bg-blue-500 text-white py-2 px-4 rounded">Prev</button>
+                            <button class="btn mt-8 bg-blue-500 text-white py-2 px-4 rounded">Flip</button>
+                            <button class="mt-8 bg-blue-500 text-white py-2 px-4 rounded">Next</button>
+                        </div>
+                        
+                    </div>
+                    <!-- 버튼 생성 영역 -->
+                    <div class="flex justify-center" id="btnbox"></div>
+
+                </section>
+
+                <!-- chatbot 이동 및 뒤로가기 버튼 영역 -->
+                <div class="flex justify-between">
+                    <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                    <img class="w-12 h-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/backicon.png" alt="" onclick="location.href='/memory_card/memory_card_list.html'">
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            // Tailwind CSS 버튼을 클릭하여 플래시 카드를 뒤집기 위한 함수
+            const flipButton = document.querySelector('.btn');
+            function flipCard() {
+                const card = document.querySelector('.card');
+                card.classList.toggle('flipped');
+            }
+            // Tailwind CSS 버튼에 대한 클릭 이벤트 리스너 추가
+            flipButton.addEventListener('click', flipCard);
+            </script>
+    </body>
+</html>

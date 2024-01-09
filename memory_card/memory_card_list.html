@@ -54,6 +54,7 @@
                 <!-- chatbot 이동 영역 -->
                 <div id="iconsection" class="flex justify-between">
                     <img class="w-16 opacity-60 cursor-pointer hover:opacity-80" src="../image/chatbotmoveicon.png" alt="" onclick="location.href='/chat_bot/chat.html'">
+                    <img class="w-8 opacity-60 cursor-pointer hover:opacity-80" src="../image/playicon.png" alt="" onclick="location.href='/memory_card/memory_card_content_play.html'">
                 </div>
 
             </section>
@@ -71,8 +72,7 @@
                 }
             
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
-                // fetch('http://127.0.0.1:8000/memorycards/', {
-                fetch('http://13.124.190.254:8000/memorycards/', {
+                fetch('http://127.0.0.1:8000/memorycards/', {
                     method: 'GET',
                     headers: {
                     'Authorization': `Bearer ${accesstoken}`

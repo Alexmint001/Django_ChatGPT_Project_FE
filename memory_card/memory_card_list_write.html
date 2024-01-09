@@ -15,8 +15,7 @@
             <div class="rounded-2xl bg-slate-100 bg-opacity-40 space-y-1 flex flex-col justify-between m-3 p-3" style="width:468px; height:820px;">
 
                 <!-- 입력창 영역 -->
-                <!-- <form action="http://127.0.0.1:8000/memorycards/" method="post"> -->
-                <form action="http://13.124.190.254:8000/memorycards/" method="post">
+                <form action="http://127.0.0.1:8000/memorycards/" method="post">
 
                     <!-- 메인 컨텐츠 박스 -->
                     <section>
@@ -65,8 +64,7 @@
                     content: content,
                 }
                 // fetch를 이용해서 서버에 POST 요청을 보낸다.
-                // fetch('http://127.0.0.1:8000/memorycards/', {
-                fetch('http://13.124.190.254:8000/memorycards/', {
+                fetch('http://127.0.0.1:8000/memorycards/', {
                     method: 'post',
                     headers: {
                     'Authorization': `Bearer ${accesstoken}`,

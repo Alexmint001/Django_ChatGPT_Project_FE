@@ -51,8 +51,8 @@
                     </div>
 
                     <!-- 사용자 입력 부분 -->
-                    <!-- <form action="http://127.0.0.1:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36"> -->
-                    <form action="http://13.124.190.254:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36">
+                    <form action="http://127.0.0.1:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36">
+                    <!-- <form action="http://13.124.190.254:8000/chatbot/" method="post" class="flex bg-green-100 pt-3 pl-3 pb-3 h-36"> -->
                         <textarea name="prompt" id="prompt" style="resize:none;" class="grow rounded-xl p-2 text-green-500"></textarea>
                         <img src="../image/msgsendicon.png" alt="" id="chatbot" class="w-10 h-10 m-1 opacity-80 hover:opacity-100 cursor-pointer self-end">
                     </form>
@@ -77,8 +77,7 @@
                     return;
                 }
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
-                // fetch(`http://127.0.0.1:8000/chatbot/`, {
-                fetch(`http://13.124.190.254:8000/chatbot/`, {
+                fetch(`http://127.0.0.1:8000/chatbot/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${accesstoken}`
@@ -151,8 +150,7 @@
                     prompt: prompt,
                 }
                 // fetch를 이용해서 서버에 POST 요청을 보낸다.
-                // fetch('http://127.0.0.1:8000/chatbot/', {
-                fetch('http://13.124.190.254:8000/chatbot/', {
+                fetch('http://127.0.0.1:8000/chatbot/', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${accesstoken}`,

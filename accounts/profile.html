@@ -54,8 +54,7 @@
                     return;
                 }
                 // 토큰이 있는 경우 서버에 토큰 유효성 검사 요청
-                // fetch(`http://127.0.0.1:8000/accounts/profile/`, {
-                fetch(`http://13.124.190.254:8000/accounts/profile/`, {
+                fetch(`http://127.0.0.1:8000/accounts/profile/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${accesstoken}`
